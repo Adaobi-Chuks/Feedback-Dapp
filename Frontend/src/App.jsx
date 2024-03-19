@@ -32,9 +32,38 @@ const findMetaMaskAccount = async () => {
 };
 
 function App() {
-  const contractAddress = "0x6af63e28726404654059407773593fba5AC39aF8";
+  const contractAddress = "0x6BB6dFa3d9886112df92d645A9A0CAF6F873cA22";
   const contractABI = abi.abi;
   const [currentAccount, setCurrentAccount] = useState("");
+  const [allWaves, setAllWaves] = useState([]);
+
+  const getAllWaves = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.BrowserProvider(ethereum);
+        // const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, provider);
+        const waves = await wavePortalContract.getAllWaves();
+
+        let wavesCleaned = [];
+        waves.forEach(wave => {
+          wavesCleaned.push({
+            address: wave.waver,
+            timestamp: new Date(Number(wave.timestamp) * 1000),
+            message: wave.message
+          });
+        });
+
+        setAllWaves(wavesCleaned);
+      } else {
+        console.log("Ethereum object doesn't exist!")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   const connectWallet = async () => {
     try {
@@ -67,7 +96,7 @@ function App() {
         let count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", Number(count));
 
-        const waveTxn = await wavePortalContract.wave();
+        const waveTxn = await wavePortalContract.wave("Hey hey hey!!!");
         console.log("Mining...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -76,6 +105,7 @@ function App() {
         count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", Number(count));
 
+        await getAllWaves()
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -85,9 +115,10 @@ function App() {
   }
 
   useEffect(() => {
-    findMetaMaskAccount().then((account) => {
+    findMetaMaskAccount().then(async (account) => {
       if (account !== null) {
         setCurrentAccount(account);
+        await getAllWaves();
       }
     });
   }, []);
@@ -109,9 +140,16 @@ function App() {
         </div>
         <div onClick={wave}>wave</div>
         <button type="submit" className="submit-btn">Submit Feedback</button>
-        <div className='feedbacks' id='feedbacks'></div>
       </form>
-    </div>
+      {allWaves.map((wave, index) => {
+        return (
+          <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+            <div>Address: {wave.address}</div>
+            <div>Time: {wave.timestamp.toString()}</div>
+            <div>Message: {wave.message}</div>
+          </div>)
+      })}
+      </div>
     </>
   )
 }
