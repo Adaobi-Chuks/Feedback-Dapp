@@ -41,13 +41,9 @@ function App() {
     try {
       const { ethereum } = window;
       if (ethereum) {
-        // await window.ethereum.enable()
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-
         const provider = new ethers.BrowserProvider(ethereum);
         const signer = await provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, provider);
-        console.log(wavePortalContract)
         const waves = await wavePortalContract.getAllWaves();
 
         let wavesCleaned = [];
@@ -109,7 +105,7 @@ function App() {
         count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", Number(count));
 
-        await getAllWavess()
+        await getAllWavess() 
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -157,7 +153,7 @@ function App() {
           <div key={index} style={{color: "#000814", backgroundColor: "#9a8c98", marginTop: "16px", padding: "8px 15%" }}>
             <div className='message'> <b>Message: </b> {wave.message}</div>
             <div className='address'><b>Address: </b> {wave.address}</div>
-            <div className='time'><b>Time: </b> {wave.timestamp.toString()}</div>
+            {/* <div className='time'><b>Time: </b> {wave.timestamp.toString()}</div> */}
           </div>)
       })}
       </div>
