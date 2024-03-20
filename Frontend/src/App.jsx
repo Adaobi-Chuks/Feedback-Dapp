@@ -42,7 +42,6 @@ function App() {
       const { ethereum } = window;
       if (ethereum) {
         const provider = new ethers.BrowserProvider(ethereum);
-        // const signer = provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, provider);
         const waves = await wavePortalContract.getAllWaves();
 
@@ -84,7 +83,7 @@ function App() {
     }
   };
 
-  const wave = async () => {
+  const wave = async (message) => {
     try {
       const { ethereum } = window;
 
@@ -96,7 +95,7 @@ function App() {
         let count = await wavePortalContract.getTotalWaves();
         console.log("Retrieved total wave count...", Number(count));
 
-        const waveTxn = await wavePortalContract.wave("Hey hey hey!!!");
+        const waveTxn = await wavePortalContract.wave(message);
         console.log("Mining...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -123,30 +122,37 @@ function App() {
     });
   }, []);
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const feedbackMessage = document.getElementById('feedback').value;
+    await wave(feedbackMessage);
+    document.getElementById('feedback').value = '';
+  };
+
   return (
     <>
     <div className='container'>
       <h1 className='title'>Feedback DApp</h1>
       {
         currentAccount ? 
-          (<div>Welcome {currentAccount}</div>) 
-          : 
+          (<div className='welcome'>Welcome {currentAccount}</div>) 
+          :
           (<button className='connect-wallet-btn' onClick={connectWallet} >Connect Wallet</button>)
       }
-      <form>
-        <div>
-          <label htmlFor="feedbackMessage">Feedback Message:</label>
+      <form onSubmit={handleSubmit}>
+        <div className='feed'>
+          <label className='feedback' htmlFor="feedbackMessage"><b>Feedback Message:</b></label>
           <textarea id="feedback" name="feedbackMessage" rows="4" required></textarea>
         </div>
-        <div onClick={wave}>wave</div>
+        {/* <div onClick={wave}>wave</div> */}
         <button type="submit" className="submit-btn">Submit Feedback</button>
       </form>
       {allWaves.map((wave, index) => {
         return (
           <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
-            <div>Address: {wave.address}</div>
-            <div>Time: {wave.timestamp.toString()}</div>
-            <div>Message: {wave.message}</div>
+            <div className='message'> <b>Message: </b> {wave.message}</div>
+            <div className='address'><b>Address: </b> {wave.address}</div>
+            <div className='time'><b>Time: </b> {wave.timestamp.toString()}</div>
           </div>)
       })}
       </div>

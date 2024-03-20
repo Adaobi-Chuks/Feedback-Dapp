@@ -9,3 +9,56 @@ body {
 .connect-wallet-btn, .submit-btn {  
   cursor: pointer;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 55px;
+  margin-bottom: 10px;
+}
+
+.welcome {
+  margin-top: 0;
+}
+
+.feed {
+  display: flex;
+  margin: 20px;
+}
+
+.feedback {
+  margin-right: 20px;
+  font-size: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  border: 2px solid rgb(48, 42, 42);
+  border-radius: 5px;
+  font-size: 15px;
+  background-color: navajowhite;
+}
+
+.message {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.address {
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.time {
+  font-size: 15px;
+}
