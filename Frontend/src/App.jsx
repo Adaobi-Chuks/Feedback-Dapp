@@ -32,7 +32,7 @@ const findMetaMaskAccount = async () => {
 };
 
 function App() {
-  const contractAddress = "0x6BB6dFa3d9886112df92d645A9A0CAF6F873cA22";
+  const contractAddress = "0xBc41B49b314154cb74B502a2d76B7b8B378C8daa";
   const contractABI = abi.abi;
   const [currentAccount, setCurrentAccount] = useState("");
   const [allWaves, setAllWaves] = useState([]);
@@ -42,7 +42,8 @@ function App() {
       const { ethereum } = window;
       if (ethereum) {
         const provider = new ethers.BrowserProvider(ethereum);
-        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, provider);
+        const signer = await provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
         const waves = await wavePortalContract.getAllWaves();
 
         let wavesCleaned = [];
@@ -92,8 +93,8 @@ function App() {
         const signer = await provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        let count = await wavePortalContract.getTotalWaves();
-        console.log("Retrieved total wave count...", Number(count));
+        // let count = await wavePortalContract.getTotalWaves();
+        // console.log("Retrieved total wave count...", Number(count));
 
         const waveTxn = await wavePortalContract.wave(message);
         console.log("Mining...", waveTxn.hash);
@@ -101,8 +102,8 @@ function App() {
         await waveTxn.wait();
         console.log("Mined -- ", waveTxn.hash);
 
-        count = await wavePortalContract.getTotalWaves();
-        console.log("Retrieved total wave count...", Number(count));
+        // count = await wavePortalContract.getTotalWaves();
+        // console.log("Retrieved total wave count...", Number(count));
 
         await getAllWaves()
       } else {
