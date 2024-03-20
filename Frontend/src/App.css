@@ -1,5 +1,7 @@
 body {
-  background-color: rgba(17, 17, 20, 0.711);
+  background-color: #22223b;
+  color: #f2e9e4;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .connect-wallet-btn {
@@ -8,6 +10,23 @@ body {
 
 .connect-wallet-btn, .submit-btn {  
   cursor: pointer;
+  color: #000;
+  background-color: #4a4e69;
+  border: 2px solid #f2e9e4;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 3px 20px;
+}
+
+textarea {
+  background-color: #9a8c98;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.submit-btn {
+  margin-top: 10px;
 }
 
 .container {
@@ -40,13 +59,7 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-button {
-  border: 2px solid rgb(48, 42, 42);
-  border-radius: 5px;
-  font-size: 15px;
-  background-color: navajowhite;
+  margin-bottom: 40px;
 }
 
 .message {

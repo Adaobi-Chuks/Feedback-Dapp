@@ -149,7 +149,7 @@ function App() {
       </form>
       {allWaves.map((wave, index) => {
         return (
-          <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+          <div key={index} style={{color: "#000814", backgroundColor: "#9a8c98", marginTop: "16px", padding: "8px 15%" }}>
             <div className='message'> <b>Message: </b> {wave.message}</div>
             <div className='address'><b>Address: </b> {wave.address}</div>
             <div className='time'><b>Time: </b> {wave.timestamp.toString()}</div>
