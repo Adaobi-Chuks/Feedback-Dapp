@@ -114,7 +114,7 @@ function App() {
   }
 
   useEffect(() => {
-    findMetaMaskAccount().then(async (account) => {
+    findMetaMaskAccount().then((account) => {
       if (account !== null) {
         getAllWaves();
         setCurrentAccount(account);
