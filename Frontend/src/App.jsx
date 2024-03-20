@@ -37,20 +37,24 @@ function App() {
   const [currentAccount, setCurrentAccount] = useState("");
   const [allWaves, setAllWaves] = useState([]);
 
-  const getAllWaves = async () => {
+  const getAllWavess = async () => {
     try {
       const { ethereum } = window;
       if (ethereum) {
+        // await window.ethereum.enable()
+        // const provider = new ethers.providers.Web3Provider(window.ethereum);
+
         const provider = new ethers.BrowserProvider(ethereum);
         const signer = await provider.getSigner();
-        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, provider);
+        console.log(wavePortalContract)
         const waves = await wavePortalContract.getAllWaves();
 
         let wavesCleaned = [];
         waves.forEach(wave => {
           wavesCleaned.push({
             address: wave.waver,
-            timestamp: new Date(Number(wave.timestamp) * 1000),
+            // timestamp: new Date(Number(wave.timestamp) * 1000),
             message: wave.message
           });
         });
@@ -93,8 +97,8 @@ function App() {
         const signer = await provider.getSigner();
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        // let count = await wavePortalContract.getTotalWaves();
-        // console.log("Retrieved total wave count...", Number(count));
+        let count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count...", Number(count));
 
         const waveTxn = await wavePortalContract.wave(message);
         console.log("Mining...", waveTxn.hash);
@@ -102,10 +106,10 @@ function App() {
         await waveTxn.wait();
         console.log("Mined -- ", waveTxn.hash);
 
-        // count = await wavePortalContract.getTotalWaves();
-        // console.log("Retrieved total wave count...", Number(count));
+        count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count...", Number(count));
 
-        await getAllWaves()
+        await getAllWavess()
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -115,10 +119,11 @@ function App() {
   }
 
   useEffect(() => {
+    const account = findMetaMaskAccount()
     findMetaMaskAccount().then(async (account) => {
       if (account !== null) {
         setCurrentAccount(account);
-        await getAllWaves();
+        await getAllWavess();
       }
     });
   }, []);
@@ -145,7 +150,6 @@ function App() {
           <label className='feedback' htmlFor="feedbackMessage"><b>Feedback Message:</b></label>
           <textarea id="feedback" name="feedbackMessage" rows="4" required></textarea>
         </div>
-        {/* <div onClick={wave}>wave</div> */}
         <button type="submit" className="submit-btn">Submit Feedback</button>
       </form>
       {allWaves.map((wave, index) => {
